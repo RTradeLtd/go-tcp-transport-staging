@@ -119,6 +119,12 @@ func (t *TcpTransport) maListen(laddr ma.Multiaddr) (manet.Listener, error) {
 	return manet.Listen(laddr)
 }
 
+// ListenWith is similar to Listen, but uses a provided listener
+func (t *TcpTransport) ListenWith(listener manet.Listener) (transport.Listener, error) {
+	list := &lingerListener{listener, 0}
+	return t.Upgrader.UpgradeListener(t, list), nil
+}
+
 // Listen listens on the given multiaddr.
 func (t *TcpTransport) Listen(laddr ma.Multiaddr) (transport.Listener, error) {
 	list, err := t.maListen(laddr)

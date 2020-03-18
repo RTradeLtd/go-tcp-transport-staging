@@ -1,9 +1,10 @@
 package tcp
 
 import (
+	"testing"
+
 	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
-	"testing"
 
 	"github.com/libp2p/go-libp2p-core/sec/insecure"
 	mplex "github.com/libp2p/go-libp2p-mplex"
@@ -12,6 +13,7 @@ import (
 	ttransport "github.com/libp2p/go-libp2p-testing/suites/transport"
 
 	ma "github.com/multiformats/go-multiaddr"
+	manet "github.com/multiformats/go-multiaddr-net"
 )
 
 func TestTcpTransport(t *testing.T) {
@@ -30,7 +32,19 @@ func TestTcpTransport(t *testing.T) {
 
 		zero := "/ip4/127.0.0.1/tcp/0"
 		ttransport.SubtestTransport(t, ta, tb, zero, ia.LocalPeer())
-
+		addr, err := ma.NewMultiaddr("/ip4/127.0.0.1/tcp/0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		list, err := manet.Listen(addr)
+		if err != nil {
+			t.Fatal(err)
+		}
+		tt, err := tb.ListenWith(list)
+		if err != nil {
+			t.Fatal(err)
+		}
+		tt.Close()
 		envReuseportVal = false
 	}
 	envReuseportVal = true
