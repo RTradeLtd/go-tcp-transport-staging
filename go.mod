@@ -1,4 +1,4 @@
-module github.com/libp2p/go-tcp-transport
+module github.com/RTradeLtd/go-tcp-transport-staging
 
 require (
 	github.com/ipfs/go-log v0.0.1
